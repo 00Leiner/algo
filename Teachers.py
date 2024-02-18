@@ -25,8 +25,6 @@ class Teacher:
         self.teacher_availability[teacher_id].append(day)
         for t in range(time):
           self.teacher_availability[teacher_id][day].append(t)
-    elif teacher_id not in self.teacher_availability:
+    else:
       self.teacher_availability[teacher_id][day] = [t for t in range(time)]
       return True
-    else:
-      return False

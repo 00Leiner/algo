@@ -19,7 +19,6 @@ class Scheduling:
     self.course_types_domain = {}
     self.room_domain = {}
 
-
     #populate
     self.domain()
     self.teacher()

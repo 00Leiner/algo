@@ -1,7 +1,6 @@
 class Teacher:
 
-  def __init__(self, teachers, max_daily_hours, max_continuous_hours,
-               max_day_in_week):
+  def __init__(self, teachers, max_daily_hours, max_continuous_hours, max_day_in_week):
     self.teachers = teachers
     self.max_daily_hours = max_daily_hours
     self.max_continuous_hours = max_continuous_hours
@@ -17,6 +16,8 @@ class Teacher:
           if self.check_working_hour_limit(self, teacher_id,day):  #6 hours daily hourly limit
             if self.check_time_availability(teacher_id, day, time):
               if self.rest_hour_required(self, teacher_id, day, time):  #required rest hour
+                for start, end in time:
+                  self.teacher_availability[teacher_id][day].append((start, end))
                 return True
               else:
                 return False
@@ -26,12 +27,12 @@ class Teacher:
             return False
         else:  #if day is not in the dictionary, add it with the time
           self.teacher_availability[teacher_id].append(day)
-          for t in range(time):
-            self.teacher_availability[teacher_id][day].append(t)
+          for start, end in time:
+            self.teacher_availability[teacher_id][day].append((start, end))
       else:
         return False
     else:  #if teacher is not in the dictionary, add it with the day and time
-      self.teacher_availability[teacher_id][day] = [t for t in range(time)]
+      self.teacher_availability[teacher_id][day] = [(start, end) for start, end in time]
       return True
 
   def rest_day_required(self, teacher_id):

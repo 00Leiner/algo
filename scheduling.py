@@ -18,10 +18,21 @@ class Scheduling:
     self.course_code_domain = {}
     self.course_types_domain = {}
     self.room_domain = {}
+    self.room_availability_domain = {}
 
     #populate
-    self.domain()
     self.teacher()
+    self.domain()
+    self.assignment()
+
+  def teacher(self):
+    teachers = self.teacher_domain
+    max_daily_hours = 6
+    max_continuous_hours = 3
+    max_day_in_week = 5
+    #print(teachers)
+    Teachers.Teacher(teachers, max_daily_hours, max_continuous_hours,
+                     max_day_in_week)
 
   def domain(self):
     for student in self.students:
@@ -40,12 +51,11 @@ class Scheduling:
 
     for room in self.rooms:
       self.room_domain[room['_id']] = [(room['types'])]
+      self.room_availability_domain[room['_id']] = {}
+      for day in self.day:
+        self.room_availability_domain[room['_id']][day] = []
+        for time in self.time:
+          self.room_availability_domain[room['_id']][day].append(time)
 
-  def teacher(self):
-    teachers = self.teacher_domain
-    max_daily_hours = 6
-    max_continuous_hours = 3
-    max_day_in_week = 5
-    #print(teachers)
-    Teachers.Teacher(teachers, max_daily_hours, max_continuous_hours,
-                     max_day_in_week)
+  def assignment(self):
+    pass

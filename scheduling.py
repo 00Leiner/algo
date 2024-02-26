@@ -20,7 +20,7 @@ class Scheduling:
     self.generate_schedule = {}
 
   def student(self):
-    student = self.students
+    students = self.students
     
 
   def teacher(self):

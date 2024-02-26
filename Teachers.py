@@ -32,7 +32,7 @@ class Teacher:
       else:
         return False
     else:  #if teacher is not in the dictionary, add it with the day and time
-      self.teacher_availability[teacher_id][day] = [(start, end) for start, end in time]
+      self.teacher_availability.append([teacher_id][day] = [(start, end) for start, end in time])
       return True
 
   def rest_day_required(self, teacher_id):

@@ -12,50 +12,39 @@ class Scheduling:
     self.day = ["Monday", "Tuesday"]
     self.time = [(7, 8), (8, 9)]
 
-    #domain
-    self.student_domain = {}
-    self.teacher_domain = {}
-    self.course_code_domain = {}
-    self.course_types_domain = {}
-    self.room_domain = {}
-    self.room_availability_domain = {}
-
     #populate
     self.teacher()
-    self.domain()
     self.assignment()
 
+    #generatede_schedule
+    self.generate_schedule = {}
+
+  def student(self):
+    student = self.students
+    
+
   def teacher(self):
-    teachers = self.teacher_domain
+    teachers = self.teachers
     max_daily_hours = 6
     max_continuous_hours = 3
     max_day_in_week = 5
     #print(teachers)
     Teachers.Teacher(teachers, max_daily_hours, max_continuous_hours,
                      max_day_in_week)
-
-  def domain(self):
-    for student in self.students:
-      self.student_domain[student['_id']] = [
-          course['code'] for course in student['courses']
-      ]
-
-    for teacher in self.teachers:
-      self.teacher_domain[teacher['_id']] = [
-          course['code'] for course in teacher['specialized']
-      ]
-
-    for course in self.courses:
-      self.course_code_domain[course['_id']] = [(course['code'])]
-      self.course_types_domain[course['_id']] = [(course['types'])]
-
-    for room in self.rooms:
-      self.room_domain[room['_id']] = [(room['types'])]
-      self.room_availability_domain[room['_id']] = {}
-      for day in self.day:
-        self.room_availability_domain[room['_id']][day] = []
-        for time in self.time:
-          self.room_availability_domain[room['_id']][day].append(time)
+    
 
   def assignment(self):
-    pass
+    for student in self.students:
+      for curr_course_code in student['courses']:
+        for teacher in self.teachers:
+          for specialized_code in teacher['specialized']:
+            for course in self.courses:
+              for room in self.rooms:
+                for day in self.day:
+                  for time in self.time:
+                    if (curr_course_code['code'] == course['code']
+                        and specialized_code['code'] == course['code']
+                        and course['types'] == room['types']):
+                      print(student['_id'], curr_course_code['code'], teacher['_id'],
+                            specialized_code['code'], course['code'], room['_id'], day,
+                            time)

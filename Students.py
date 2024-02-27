@@ -6,11 +6,9 @@ class Student:
     self.is_student_scheduled = {}
 
   def student_constraints(self, student, course, day, time):
-    if student[
-        '_id'] in self.is_student_curriculumn_scheduled:  # student with history of been scheduled
-      if self.check_student_schedule(student, day,
-                                     time) and self.check_course_schedule(
-                                         student, course):  #checking
+    if student['_id'] in self.is_student_curriculumn_scheduled:  # student with history of been scheduled
+      if (self.check_student_schedule(student, day, time) and 
+          self.check_course_schedule(student, course)):  #checking
         self.is_student_curriculumn_scheduled[student['_id']] = [course]
         self.is_student_scheduled[student['_id']] = [day]
         for start, end in time:

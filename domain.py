@@ -13,7 +13,7 @@ class domain:
 
   def lab_room_domain(self):
     lab_room = {room['_id']: {day: {timeslot: [] for timeslot in self.time} for day in self.day} for room in self.room if room['types'] == 'laboratory'}
-    return [lab_room]
+    return lab_room
 
   def lec_room_domain(self):
     lec_room = {room['_id']: {day: {timeslot: [] for timeslot in self.time} for day in self.day} for room in self.room if room['types'] == 'lecture'}

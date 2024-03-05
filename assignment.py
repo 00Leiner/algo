@@ -4,10 +4,16 @@ class assignment:
     self.teachers = _teachers
     self.courses = _courses
     self.rooms = _rooms
+    self.day = _day
+    self.time = _time
+    self.lab_room = _lab_room
+    self.lec_room = _lec_room
+    self.teacher_availability = teacher_availability
 
-    self.assignments ={}
-    print('apple')
+    self.assignments = {}
 
+    self.student_assignment()
+    
   def student_assignment(self):
     for student in self.students:
       for course in student['courses']:
@@ -19,21 +25,33 @@ class assignment:
           type = course['types']
 
           if type == 'laboratory':
-              # Number of hours required for laboratory sessions
-              num_of_hour_in_lab = 3
+            #number of hours
+            num_of_hours_in_lab = 3
+            num_of_hours_in_lec = 2
 
-              # Find a room and day that lab_room have enough time slots 
-              available_lab_room = None 
-              for room, day_schedule in self.lab_room.items():
-                  for day, time_slots in day_schedule.items():
-                      if len(time_slots) >= num_of_hour_in_lab:
-                          available_lab_room = (room, day)
-                          break
+            available_lab_room = None
+            for room, day in self.lab_room.items():
+              for day, time in day.items():
+                if len(time) >= num_of_hours_in_lab:
+                  available_lab_room = (room, day)
+                  break
+              
+            # If no room and day available, then return False
+            if available_lab_room is None:
+                print(f"Not enough available slots in laboratory room to assign all units for student {student_id} course {course['code']}")
+                return False
 
-              # If no room and day available, then return False
-              if available_lab_room is None:
-                  print(f"Not enough available slots in laboratory room to assign all units for student {student_id} course {course['code']}")
-                  return
+            # Assign units to available slots on the chosen room and day
+            available_slots_in_lab_room = [slot for slot, slot_data in self.lab_room[available_lab_room[0]][available_lab_room[1]].items() if not slot_data]
+
+            all_slots_in_lab_room = []
+            for slot in available_slots_in_lab_room[:num_of_hours_in_lab]:
+              lab_day = available_lab_room[1]
+              all_slots_in_lab_room.append(slot)
+              #teacher_id = self.teacher_assignment(course_code, lab_day, slot)
+              
+            
+            '''
 
               # Assign units to available slots on the chosen room and day
               available_slots_in_lab_room = [slot for slot, slot_data in self.lab_room[available_lab_room[0]][available_lab_room[1]].items() if not slot_data]
@@ -63,17 +81,15 @@ class assignment:
                     # Assign units to available slots on the chosen room and day
                     available_slots_in_lec_room = [slot for slot, slot_data in self.lec_room[available_lec_room[0]][available_lab_room[1]].items() if not slot_data]
 
-
-                    '''
                       # Update schedule with the assigned course unit
                       self.lab_room[available_lab_room[0]][lab_day][slot] = (student_id, course_code, teacher_id)
                       print(self.lab_room)
-                      print(f"Assigned {course_code} to student {student_id} in room {available_slots_in_lab_room[0]} on {lab_day} at slot {slot} with teacher {teacher_id}")'''
+                      print(f"Assigned {course_code} to student {student_id} in room {available_slots_in_lab_room[0]} on {lab_day} at slot {slot} with teacher {teacher_id}")
                   else:
                       print(f"No teacher available for course {course_code} at {day}, slot {slot}")
-
+'''
   
-    def teacher_assignment(self):
+  def teacher_assignment(self, course_code, day, time):
       #check if the teacher is available on the given day and time
       getTeacher = None
       for teacher_id in self.course_teacher_assignments[course_code]:

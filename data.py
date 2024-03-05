@@ -88,4 +88,16 @@ teachers = [{
         "units": "3",
         "types": "lecture"
     }]
-}]
+},{
+               "_id":
+               "2",
+               "name":
+               "teacher2",
+               "specialized": [{
+                   "_id": "2",
+                   "code": "cs2",
+                   "description": "cs2des",
+                   "units": "3",
+                   "types": "lecture"
+               }]
+           }]

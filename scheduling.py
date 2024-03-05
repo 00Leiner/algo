@@ -1,5 +1,5 @@
-import Teachers
-
+import domain
+import assignment
 
 class Scheduling:
 
@@ -9,42 +9,31 @@ class Scheduling:
     self.teachers = _teachers
     self.courses = _courses
     self.rooms = _rooms
-    self.day = ["Monday", "Tuesday"]
-    self.time = [(7, 8), (8, 9)]
+    self.day = ["Monday", "Tuesday", "Wednesday"]
+    self.time = [(7, 8), (8, 9),(9,10),(10,11),(12,13)]
 
+    #domain
+    self.lab_room = {} # laboratoryroom availability (room, type, time)
+    self.lec_room = {}# lectureroom availability (room, type, time)
+    self.teacher_availability = {} #teacher availability (teacher, day, time)
+    self.domain_instance = domain.domain(self.rooms, self.day, self.time, self.courses, self.teachers) # domain implementation
+
+    #assingmnet
+    self.assignments = {}
+    self.assingment_instance = assignment.assignment(self.students, self.courses, self.teachers, self.rooms, self.day, self.time, self.lab_room, self.lec_room, self.teacher_availability) # assignment implementation
+    
     #populate
-    self.teacher()
+    self.domain()
     self.assignment()
-
-    #generatede_schedule
-    self.generate_schedule = {}
-
-  def student(self):
-    students = self.students
     
+  def domain(self):
+    self.lab_room = self.domain_instance.lab_room_domain()
+    self.lec_room = self.domain_instance.lec_room_domain()
+    self.teacher_availability = self.domain_instance.course_teacher_domain()
 
-  def teacher(self):
-    teachers = self.teachers
-    max_daily_hours = 6
-    max_continuous_hours = 3
-    max_day_in_week = 5
-    #print(teachers)
-    Teachers.Teacher(teachers, max_daily_hours, max_continuous_hours,
-                     max_day_in_week)
     
-
   def assignment(self):
-    for student in self.students:
-      for curr_course_code in student['courses']:
-        for teacher in self.teachers:
-          for specialized_code in teacher['specialized']:
-            for course in self.courses:
-              for room in self.rooms:
-                for day in self.day:
-                  for time in self.time:
-                    if (curr_course_code['code'] == course['code']
-                        and specialized_code['code'] == course['code']
-                        and course['types'] == room['types']):
-                      print(student['_id'], curr_course_code['code'], teacher['_id'],
-                            specialized_code['code'], course['code'], room['_id'], day,
-                            time)
+    self.assignments = self.assingment_instance.assignments
+    
+  def constraints(self):
+    pass

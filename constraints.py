@@ -3,28 +3,23 @@ class constraints:
     self.lab_room = lab_room
     self.lec_room = lec_room
     
-  #i need the set of 3 hours consecutive available time for laboratory and list of set of 2 hours consecutive available time for lecture
-  def setOfHoursAvailableInLabRoom(self, hrs, labOrLec):
-    numberOfHours = hrs
-    
-    valid_room_day = []
-    for room, day in labOrLec.items():
-      for day, time in day.items():
-        if len(time) >= numberOfHours:
-          valid_room_day.append((room, day))
+  def search_for_avaialable_slot_in_room(self, day, hrs, list_of_room):
+    # Find the day with enough available slots to accommodate all units
+    available_day = None
+    for day, slots in day.items():
+      available_slots = sum(1 for slot in slots.values() if not slot)
+      if available_slots >= hrs:
+        available_day = day
+        break
+          
+    # Assign units to available slots on the chosen day
+    available_slots = {}
+    available_slots[available_day] = []
+    for slot, slot_data in list_of_room[available_day].items():
+      if not slot_data:
+        available_slots[available_day].append(slot)
 
-    if len(valid_room_day) == 0:
-      print(f"Not enough available slots")
-      return False
+    return available_slots
 
-    available_slots = []
-    for r, d in valid_room_day:
-      x = [slot for slot, slot_data in labOrLec[r][d].items() if not slot_data]
-      available_slots.append(x)
-
-    set_of_available_slot = []
-    for set in available_slots:
-      print(set)
-      for slot in set[:numberOfHours]:
-        set_of_available_slot.append(slot)
-    print(set_of_available_slot)
+  def search_for_avaialable_slot_for_second_schedule(self, hrs, list_of_room, day):
+    pass

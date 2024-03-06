@@ -1,24 +1,15 @@
-class domain:
-  def __init__(self, _room, _day, _time, _courses, _teacher) -> None:
-    self.room = _room
-    self.time = _time
-    self.day = _day
-    self.courses = _courses
-    self.teacher = _teacher
+    '''            
+    # Find the day with enough available slots to accommodate all units
+    available_slots = self.constraint_instance.search_for_avaialable_slot_in_room(hrsInLab, self.lab_room)
 
-    self.lab_room_domain()
-    self.lec_room_domain()
-    self.course_teacher_domain()
+    if len(available_slots) == 0:
+      print(f"Not enough available slots to assign for course {course['_id']}")
+      return
 
-
-  def lab_room_domain(self):
-    lab_room = {room['_id']: {day: {timeslot: [] for timeslot in self.time} for day in self.day} for room in self.room if room['types'] == 'laboratory'}
-    return lab_room
-
-  def lec_room_domain(self):
-    lec_room = {room['_id']: {day: {timeslot: [] for timeslot in self.time} for day in self.day} for room in self.room if room['types'] == 'lecture'}
-    return lec_room
-
-  def course_teacher_domain(self):
-    list_of_teacher_with_specialized = {course['code']: {teacher['_id'] for teacher in self.teacher if course['code'] in [t['code'] for t in teacher['specialized']]} for course in self.courses}
-    return list_of_teacher_with_specialized
+    for room, day in available_slots:
+      for slot in available_slots[(room,day)][:hrsInLab]:
+        check_teacher_availability = self.teacher_assignment(course_code, day, slot)
+        if check_teacher_availability:
+          # Find the day with enough available slots for second schedule with 2 days gap from the previousschedule  
+          pass
+          '''

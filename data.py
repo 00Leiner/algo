@@ -100,4 +100,35 @@ teachers = [{
                    "units": "3",
                    "types": "lecture"
                }]
-           }]
+           },
+           {
+             "_id":
+             "2",
+             "name":
+             "teacher1",
+             "specialized": [{
+                 "_id": "1",
+                 "code": "cs1",
+                 "description": "cs1des",
+                 "units": "3",
+                 "types": "laboratory"
+             }, {
+                 "_id": "2",
+                 "code": "cs2",
+                 "description": "cs2des",
+                 "units": "3",
+                 "types": "lecture"
+             }]
+           },{
+                        "_id":
+                        "2",
+                        "name":
+                        "teacher2",
+                        "specialized": [{
+                            "_id": "2",
+                            "code": "cs2",
+                            "description": "cs2des",
+                            "units": "3",
+                            "types": "lecture"
+                        }]
+                    }]

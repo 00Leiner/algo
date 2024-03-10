@@ -16,7 +16,11 @@ rooms = [{
     "_id": "1",
     "name": "room1",
     "types": "laboratory"
-}, {
+},{
+             "_id": "3",
+             "name": "room3",
+             "types": "laboratory"
+         }, {
     "_id": "2",
     "name": "room2",
     "types": "lecture"
@@ -100,30 +104,11 @@ teachers = [{
                    "units": "3",
                    "types": "lecture"
                }]
-           },
-           {
-             "_id":
-             "2",
-             "name":
-             "teacher1",
-             "specialized": [{
-                 "_id": "1",
-                 "code": "cs1",
-                 "description": "cs1des",
-                 "units": "3",
-                 "types": "laboratory"
-             }, {
-                 "_id": "2",
-                 "code": "cs2",
-                 "description": "cs2des",
-                 "units": "3",
-                 "types": "lecture"
-             }]
            },{
                         "_id":
-                        "2",
+                        "3",
                         "name":
-                        "teacher2",
+                        "teacher3",
                         "specialized": [{
                             "_id": "2",
                             "code": "cs2",

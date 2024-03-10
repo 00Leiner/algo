@@ -1,5 +1,6 @@
 import data
 import scheduling
+import csp
 
 if __name__ == "__main__":
   students = data.students
@@ -7,4 +8,5 @@ if __name__ == "__main__":
   teachers = data.teachers
   rooms = data.rooms
 
-  scheduling.Scheduling(students, courses, teachers, rooms)
+  #scheduling.Scheduling(students, courses, teachers, rooms)
+  csp.CSPAlgorithm(students, courses, teachers, rooms)

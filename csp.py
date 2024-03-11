@@ -244,4 +244,15 @@ class CSPAlgorithm:
     return x
 
   def is_assignmnet_valid(self, assignment, student_id, course_code, teacher_id, first_schedule, room_id_for_first_schedule, second_schedule, room_id_for_second_schedule):
+    self.is_teacher_available(teacher_id, first_schedule, second_schedule)
+    self.is_room_available(room_id_for_first_schedule, first_schedule, room_id_for_second_schedule, second_schedule)
+    self.is_student_available(student_id, first_schedule, second_schedule)
+
+  def is_teacher_available(self, teacher_id, first_schedule, second_schedule):
+    pass
+
+  def is_room_available(self, room_id_for_first_schedule, first_schedule, room_id_for_second_schedule, second_schedule):
+    pass
+
+  def is_student_available(self, student_id, first_schedule, second_schedule):
     pass

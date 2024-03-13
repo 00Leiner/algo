@@ -296,7 +296,7 @@ class CSPAlgorithm:
         return True
     else:
       return True
-
+      
   def _ensure_6hours_maximum_aday(self, teacher_id, sched):
     ensure_maximum_of_6hours = []
     _day, _time = sched
@@ -307,6 +307,9 @@ class CSPAlgorithm:
         break
     #check the number of hours the teacher been scheduled
     if len(ensure_maximum_of_6hours) > 6:
+      return False
+
+    if (len(range(_time)) + len(ensure_maximum_of_6hours)) > 6:
       return False
       
     return True

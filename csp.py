@@ -20,7 +20,7 @@ class CSPAlgorithm:
     self.course_type = {}  #dictionarry to define course type
     self.initialize_domains()
     self.backtracking_search()
-    #print(self.schedule)
+    print(self.backtracking_search())
 
   def initialize_domains(self):
     self.student_curriculum_domain()
@@ -166,25 +166,30 @@ class CSPAlgorithm:
 
       return sets_of_time_in_lecture
 
-  def backtracking_search(self):
-    return self.backtrack({})
+  def backtracking_search(self, num_solutions=5):
+    solutions = []
+    self.backtrack({}, solutions, num_solutions)
+    return solutions
 
-  def backtrack(self, assignment):
+  def backtrack(self, assignment, solutions, num_solutions):
+    if len(solutions) == num_solutions:
+        # Stop the search if the desired number of solutions is reached
+        return
+
     if len(assignment) == len(self.schedule):
-      return assignment  # Return the complete assignment
+        # Solution found, append it to the list of solutions
+        solutions.append(assignment.copy())  # Use copy to avoid modifying the original assignment
+        return
 
     unassign_student = self.select_unassigned_course(assignment)
     if unassign_student:
       student_id, course_code = unassign_student
       for teacher_id in self.schedule[(student_id, course_code)]['teacher']:
-          for first_schedule in self.schedule[(student_id, course_code)][
-              'schedule']['first']:
-            for first_day_room_id in self.schedule[(student_id, course_code)][
-                'schedule']['first_day_room']:
-              for second_schedule in self.schedule[(student_id, course_code)][
-                  'schedule']['second']:
-                for second_day_room_id in self.schedule[(student_id, course_code)]['schedule']['second_day_room']:
-                  if self.is_assignmnet_valid(assignment, student_id, course_code, teacher_id, first_schedule, first_day_room_id, second_schedule, second_day_room_id):
+        for first_schedule in self.schedule[(student_id, course_code)]['schedule']['first']:
+          for first_day_room_id in self.schedule[(student_id, course_code)]['schedule']['first_day_room']:
+            for second_schedule in self.schedule[(student_id, course_code)][ 'schedule']['second']:
+              for second_day_room_id in self.schedule[(student_id, course_code)]['schedule']['second_day_room']:
+                if self.is_assignmnet_valid(assignment, student_id, course_code, teacher_id, first_schedule, first_day_room_id, second_schedule, second_day_room_id):
                     # Assign course to student
                     assignment[(student_id, course_code)] = {
                         'teacher': teacher_id,
@@ -200,10 +205,7 @@ class CSPAlgorithm:
                     self.update_schedule(student_id,teacher_id, second_day_room_id, second_schedule)
                     
                     # Recursively backtrack
-                    result = self.backtrack(assignment)
-                    if result is not None:
-                      #print(result)
-                      return result
+                    self.backtrack(assignment, solutions, num_solutions)
                       
                     # Backtrack if no solution found
                     assignment.pop((student_id, course_code))  # Remove after assigning
@@ -212,7 +214,7 @@ class CSPAlgorithm:
                     self.undo_update_schedule(student_id,teacher_id, second_day_room_id, second_schedule)
     
     return None
-  
+    
   def select_unassigned_course(self, assignment):
     unassigned_courses = {}
     for (student_id, course_code) in self.schedule:
@@ -223,27 +225,33 @@ class CSPAlgorithm:
   def update_schedule(self, student_id, teacher_id, room_id, sched):
     _day, _time = sched
     
-    for t in range(_time[0], (_time[1] + 1)): # the plus 1 is for rest before continues schedule
+    for t in range(_time[0], _time[1]): 
       self.teachers_schedule[teacher_id][_day][t].append('occupied')
       self.students_schedule[student_id][_day][t].append('occupied')
+    rday = _time[1]# this is for the rest day
+    if rday in self.students_schedule[student_id][_day]:
+      self.students_schedule[student_id][_day][rday].append('rest')
+      self.teachers_schedule[teacher_id][_day][rday].append('rest')
+    
+    for r in range(_time[0], (_time[1])):
+      self.rooms_schedule[room_id][_day][r].append('occupied')
       
-    for t in range(_time[0], (_time[1])):
-      self.rooms_schedule[room_id][_day][t].append('occupied')
-
   def undo_update_schedule(self, student_id, teacher_id, room_id, sched):
     _day, _time = sched
 
-    # Undo changes made to teachers_schedule and students_schedule
-    for t in range(_time[0], (_time[1] + 1)):
-        self.teachers_schedule[teacher_id][_day][t].remove('occupied')
-        self.students_schedule[student_id][_day][t].remove('occupied')
+    for t in range(_time[0], _time[1]): 
+      self.teachers_schedule[teacher_id][_day][t].remove('occupied')
+      self.students_schedule[student_id][_day][t].remove('occupied')
+    rday = _time[1]
+    if rday in self.students_schedule[student_id][_day]:
+      self.students_schedule[student_id][_day][rday].remove('rest')
+      self.teachers_schedule[teacher_id][_day][rday].remove('rest')
 
-    # Undo changes made to rooms_schedule
-    for t in range(_time[0], (_time[1])):
-        self.rooms_schedule[room_id][_day][t].remove('occupied')
+    for r in range(_time[0], (_time[1])):
+      self.rooms_schedule[room_id][_day][r].remove('occupied')
 
   def is_assignmnet_valid(self, assignment, student_id, course_code, teacher_id, first_schedule, room_id_for_first_schedule, second_schedule, room_id_for_second_schedule):
-    print(assignment)
+    
     if not self.is_teacher_available(teacher_id, first_schedule): #check teacher availability in first schedule
       return False
     if not self.is_teacher_available(teacher_id, second_schedule): #check teacher availability in second schedule
@@ -261,16 +269,18 @@ class CSPAlgorithm:
 
   def is_teacher_available(self, teacher_id, sched):
     #ensure 1 day rest
-    if not self._ensure_etacher_restday(teacher_id, sched):
+    if not self._ensure_teacher_restday(teacher_id, sched):
       return False
     #check if time is available
     if not self._check_teacher_time_availability(teacher_id, sched):
       return False
+    # ensure 6 hours maximum a day
+    if not self._ensure_6hours_maximum_aday(teacher_id, sched):
+      return False
     return True
 
-  def _ensure_etacher_restday(self, teacher_id, sched):
+  def _ensure_teacher_restday(self, teacher_id, sched):
     ensure_rest_day = []
-
     #get all day that has schedule
     for day in self.teachers_schedule[teacher_id]:
       for time in self.teachers_schedule[teacher_id][day]:
@@ -287,35 +297,48 @@ class CSPAlgorithm:
     else:
       return True
 
-  def _check_teacher_time_availability(self, teacher_id, sched):
-    if sched:
-      _day, _time = sched 
-      for t in range(_time[0], (_time[1]) + 1): # the plus 1 check if the time next to it is represent as rest
-        if self.teachers_schedule[teacher_id][_day][t]:
-          return False
-        else:
-          return True
-    else:
+  def _ensure_6hours_maximum_aday(self, teacher_id, sched):
+    ensure_maximum_of_6hours = []
+    _day, _time = sched
+    #get all time that has 
+    for time in self.teachers_schedule[teacher_id][_day]:
+      if self.teachers_schedule[teacher_id][_day][time]:
+        ensure_maximum_of_6hours.append(time)
+        break
+    #check the number of hours the teacher been scheduled
+    if len(ensure_maximum_of_6hours) > 6:
       return False
       
-  def is_room_available(self, room_id, sched):
+    return True
+    
+  def _check_teacher_time_availability(self, teacher_id, sched):
+    check_availability = True
     if sched:
       _day, _time = sched 
-      for t in range(_time[0], (_time[1])):
-        if self.rooms_schedule[room_id][_day][t]:
-          return False
-        else:
-          return True
-    else:
-      return False
+      for t in range(_time[0], _time[1] + 1):  # Iterate over the time range
+        if self.teachers_schedule[teacher_id][_day][t]:
+          check_availability = False
+    return check_availability
+      
+  def is_room_available(self, room_id, sched):
+    check_availability = True
+    if sched:
+      _day, _time = sched 
+      for t in range(_time[0], _time[1]):
+        if t in self.rooms_schedule[room_id][_day]:
+          if self.rooms_schedule[room_id][_day][t]:
+            check_availability = False
+            break
+            
+    return check_availability
 
   def is_student_available(self, student_id, sched):
+    check_availability = True
     if sched:
       _day, _time = sched 
-      for t in range(_time[0], (_time[1])):
-        if self.students_schedule[student_id][_day][t]:
-          return False
-        else:
-          return True
-    else:
-      return False
+      for t in range(_time[0], _time[1] + 1):
+        if t in self.students_schedule[student_id][_day]:
+          if self.students_schedule[student_id][_day][t]:
+            check_availability = False
+            break
+    return check_availability

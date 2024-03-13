@@ -21,6 +21,10 @@ rooms = [{
              "name": "room3",
              "types": "laboratory"
          }, {
+              "_id": "4",
+              "name": "room4",
+              "types": "laboratory"
+          },{
     "_id": "2",
     "name": "room2",
     "types": "lecture"
@@ -38,40 +42,18 @@ students = [{
     "block":
     "A",
     "courses": [{
-        "code": "cs1",
-        "description": "cs1des",
-        "units": "3",
-        "types": "laboratory"
+      "_id": "1",
+      "code": "cs1",
+      "description": "cs1des",
+      "units": "3",
+      "types": "laboratory"
     }, {
-        "_id": "2",
-        "code": "cs2",
-        "description": "cs2des",
-        "units": "3",
-        "types": "lecture"
-    }]
-}, {
-    "_id":
-    "2",
-    "program":
-    "BSCS",
-    "year":
-    "2",
-    "semester":
-    "2",
-    "block":
-    "B",
-    "courses": [{
-        "code": "cs1",
-        "description": "cs1des",
-        "units": "3",
-        "types": "laboratory"
-    }, {
-        "_id": "2",
-        "code": "cs2",
-        "description": "cs2des",
-        "units": "3",
-        "types": "lecture"
-    }]
+                   "_id": "2",
+                   "code": "cs2",
+                   "description": "cs2des",
+                   "units": "3",
+                   "types": "laboratory"
+               }]
 }]
 
 teachers = [{
@@ -93,11 +75,9 @@ teachers = [{
         "types": "lecture"
     }]
 },{
-               "_id":
-               "2",
-               "name":
-               "teacher2",
-               "specialized": [{
+  "_id":"2",
+  "name":"teacher2",
+  "specialized": [{
                    "_id": "2",
                    "code": "cs2",
                    "description": "cs2des",
@@ -105,15 +85,13 @@ teachers = [{
                    "types": "lecture"
                }]
            },{
-                        "_id":
-                        "3",
-                        "name":
-                        "teacher3",
-                        "specialized": [{
-                            "_id": "2",
-                            "code": "cs2",
-                            "description": "cs2des",
-                            "units": "3",
-                            "types": "lecture"
+  "_id":"3",
+  "name":"teacher3",
+  "specialized": [{
+    "_id": "1",
+    "code": "cs1",
+    "description": "cs1des",
+    "units": "3",
+    "types": "laboratory"
                         }]
                     }]
